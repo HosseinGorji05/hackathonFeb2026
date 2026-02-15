@@ -3,12 +3,12 @@ import { getFirestore, collection, addDoc } from "https://www.gstatic.com/fireba
 
 // 1. Paste your specific config here from the Firebase console
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "your-sender-id",
-  appId: "your-app-id"
+  apiKey: "AIzaSyBizcj2eON6m3Z8Eckbk3wEfOPezyd4_gE",
+  authDomain: "potluckio-30b92.firebaseapp.com",
+  projectId: "potluckio-30b92",
+  storageBucket: "potluckio-30b92.firebasestorage.app",
+  messagingSenderId: "643843611690",
+  appId: "1:643843611690:web:125e2a8289d13e793cf753"
 };
 
 const app = initializeApp(firebaseConfig);
