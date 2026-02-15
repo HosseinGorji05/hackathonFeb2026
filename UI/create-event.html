@@ -12,70 +12,80 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="cEvent.css" />
   </head>
   <body>
-    <div
-      style="
-        max-width: 600px;
-        margin: 50px auto;
-        background: white;
-        padding: 40px;
-        border-radius: 30px;
-      "
-    >
+    <div class="container">
       <h2>Host a New Potluck</h2>
       <form id="createEventForm">
-        <input
-          type="text"
-          id="eventName"
-          placeholder="Event Name"
-          required
-          style="width: 100%; margin-bottom: 15px; padding: 10px"
-        />
-        <input
-          type="date"
-          id="eventDate"
-          required
-          style="width: 100%; margin-bottom: 15px; padding: 10px"
-        />
-
-        <div style="display: flex; gap: 10px; margin-bottom: 20px">
-          <label for="mainCount"> # of main counts</label>
+        <div class="input-group">
+          <label for="eventName">Event Name</label>
           <input
-            type="number"
-            id="mainCount"
-            placeholder="Mains"
-            value="2"
-            style="width: 30%"
-          />
-          <label for="drinkCount"># of Drinks</label>
-          <input
-            type="number"
-            id="drinkCount"
-            placeholder="Drinks"
-            value="2"
-            style="width: 30%"
-          />
-          <label for="dessertCount"> # of Desserts</label>
-          <input
-            type="number"
-            id="dessertCount"
-            placeholder="Desserts"
-            value="2"
-            style="width: 30%"
+            type="text"
+            id="eventName"
+            placeholder="e.g., Friday Feast"
+            required
           />
         </div>
 
-        <button
-          type="submit"
-          class="btn-join"
-          style="width: 100%; padding: 15px"
-        >
-          Generate Potluck Link
-        </button>
+        <div class="input-group">
+          <label for="eventDate">Event Date</label>
+          <input type="date" id="eventDate" required />
+        </div>
+
+        <div class="fantastic-counter-row">
+          <div class="counter-card">
+            <label><i class="fa-solid fa-utensils"></i> Mains</label>
+            <div class="counter-controls">
+              <button type="button" onclick="changeQty('mainCount', -1)">
+                -
+              </button>
+              <input type="number" id="mainCount" value="2" readonly />
+              <button type="button" onclick="changeQty('mainCount', 1)">
+                +
+              </button>
+            </div>
+          </div>
+
+          <div class="counter-card">
+            <label><i class="fa-solid fa-glass-water"></i> Drinks</label>
+            <div class="counter-controls">
+              <button type="button" onclick="changeQty('drinkCount', -1)">
+                -
+              </button>
+              <input type="number" id="drinkCount" value="2" readonly />
+              <button type="button" onclick="changeQty('drinkCount', 1)">
+                +
+              </button>
+            </div>
+          </div>
+
+          <div class="counter-card">
+            <label><i class="fa-solid fa-cake-candles"></i> Desserts</label>
+            <div class="counter-controls">
+              <button type="button" onclick="changeQty('dessertCount', -1)">
+                -
+              </button>
+              <input type="number" id="dessertCount" value="2" readonly />
+              <button type="button" onclick="changeQty('dessertCount', 1)">
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-join">Generate Potluck Link</button>
       </form>
     </div>
+
+    <script>
+      // Simple logic to handle the counters
+      function changeQty(id, amount) {
+        const input = document.getElementById(id);
+        let newValue = parseInt(input.value) + amount;
+        if (newValue >= 0) input.value = newValue;
+      }
+    </script>
 
     <script type="module" src="../backEnd/app.js"></script>
   </body>
