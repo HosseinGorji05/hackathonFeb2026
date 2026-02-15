@@ -1,6 +1,6 @@
 # hackathonFeb2026
 
-🥘 Potluck Pal!
+🥘 Potluckio!
 Simplifying party planning, one dish at a time.
 
 Potluck Pal! is a web application designed to take the stress out of organizing group meals. Hosts can create events, set required categories (Mains, Drinks, Desserts), and share a unique link with guests to claim their contributions in real-time.
