@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, getDoc, doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDoc, doc, onSnapshot, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 1. YOUR FIREBASE CONFIG (Paste the keys you got from the Firebase Console here)
+// 1. YOUR FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyBizcj2eON6m3Z8Eckbk3wEfOPezyd4_gE",
   authDomain: "potluckio-30b92.firebaseapp.com",
@@ -26,7 +26,6 @@ if (createForm) {
         const date = document.getElementById('eventDate').value;
         const slots = [];
 
-        // Logic to build the slot objects based on counts
         const categories = [
             { id: 'mainCount', label: 'Main' },
             { id: 'drinkCount', label: 'Drink' },
@@ -48,7 +47,11 @@ if (createForm) {
                 createdAt: new Date()
             });
 
-            // Update UI to show the Copy ID screen
+            // NEW: Save ID to LocalStorage so it shows up in "My Potlucks"
+            const hostedEvents = JSON.parse(localStorage.getItem('myHostedEvents') || '[]');
+            hostedEvents.push(docRef.id);
+            localStorage.setItem('myHostedEvents', JSON.stringify(hostedEvents));
+
             const container = document.querySelector('.form-container') || document.body;
             container.innerHTML = `
                 <div style="text-align: center; padding: 20px;">
@@ -72,7 +75,6 @@ if (createForm) {
     });
 }
 
-// Global Copy ID function
 window.copyEventID = (id) => {
     navigator.clipboard.writeText(id).then(() => {
         const btn = document.getElementById('copyBtn');
@@ -128,3 +130,48 @@ window.claimSlot = async (index) => {
 
     await updateDoc(eventRef, { slots: slots });
 };
+
+// --- PART 3: MY POTLUCKS LIST LOGIC (my-potlucks.html) ---
+const listContainer = document.getElementById('myEventsList');
+
+if (listContainer) {
+    const renderMyEvents = async () => {
+        const savedIds = JSON.parse(localStorage.getItem('myHostedEvents') || '[]');
+        if (savedIds.length === 0) {
+            listContainer.innerHTML = "<p>No events found. Start hosting!</p>";
+            return;
+        }
+
+        listContainer.innerHTML = "";
+        for (const id of savedIds) {
+            const docSnap = await getDoc(doc(db, "events", id));
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                const item = document.createElement('div');
+                item.style = "background: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center;";
+                item.innerHTML = `
+                    <div onclick="window.location.href='claim-event.html?id=${id}'" style="cursor: pointer; flex-grow: 1;">
+                        <strong style="font-size: 18px;">${data.eventName}</strong>
+                        <p style="color: #666; font-size: 14px; margin: 5px 0;">${data.eventDate}</p>
+                        <small style="color: #66B2B2;">ID: ${id}</small>
+                    </div>
+                    <button onclick="deleteEvent('${id}')" style="background: #ff6b6b; color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer;">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                `;
+                listContainer.appendChild(item);
+            }
+        }
+    };
+
+    window.deleteEvent = (id) => {
+        if (confirm("Remove this event from your list? (This won't delete it from the database for others)")) {
+            let savedIds = JSON.parse(localStorage.getItem('myHostedEvents') || '[]');
+            savedIds = savedIds.filter(itemId => itemId !== id);
+            localStorage.setItem('myHostedEvents', JSON.stringify(savedIds));
+            renderMyEvents();
+        }
+    };
+
+    renderMyEvents();
+}
