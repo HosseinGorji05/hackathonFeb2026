@@ -1,3 +1,265 @@
-p{
-    font-size: 100px;
+/* --- GLOBAL STYLES --- */
+:root {
+    --bg-cream: #FFF8F0;
+    --card-orange: #FFB766;
+    --card-teal: #66B2B2;
+    --text-dark: #2D2D2D;
+    --btn-dark: #3E3E3E;
+    --btn-hover: #1a1a1a;
+    --white: #FFFFFF;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-cream);
+    color: var(--text-dark);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- NAVIGATION --- */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo i {
+    color: var(--card-orange);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover {
+    color: var(--card-teal);
+}
+
+/* Style for the active/current page link */
+.nav-btn-active {
+    background: #FFE0B2;
+    padding: 8px 20px;
+    border-radius: 20px;
+}
+
+.profile-icon {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* --- HERO SECTION --- */
+.hero {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 50px;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.hero p {
+    font-size: 20px;
+    color: #555;
+    font-weight: 400;
+}
+
+/* --- ACTION CARDS CONTAINER --- */
+.action-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 0 50px;
+    margin-bottom: 60px;
+}
+
+/* Common Card Styles */
+.card {
+    width: 450px;
+    height: 320px;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.card-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+    color: var(--text-dark);
+    opacity: 0.8;
+}
+
+/* Specific Card Colors */
+.host-card {
+    background-color: var(--card-orange);
+}
+
+.join-card {
+    background-color: var(--card-teal);
+}
+
+/* Buttons & Inputs */
+.btn-main {
+    background-color: var(--bg-cream);
+    color: var(--text-dark);
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: background 0.2s;
+}
+
+.btn-main:hover {
+    background-color: #fff;
+}
+
+.join-input-group {
+    display: flex;
+    gap: 10px;
+    background: var(--bg-cream);
+    padding: 5px;
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.join-input-group input {
+    border: none;
+    background: transparent;
+    padding: 10px 15px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    outline: none;
+    width: 180px;
+}
+
+.btn-join {
+    background-color: var(--btn-dark);
+    color: var(--white);
+    border: none;
+    padding: 10px 25px;
+    border-radius: 40px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-join:hover {
+    background-color: var(--btn-hover);
+}
+
+/* --- HOW IT WORKS SECTION --- */
+.how-it-works {
+    text-align: center;
+}
+
+.how-it-works h3 {
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+.steps-row {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+}
+
+.step-icon-circle {
+    width: 60px;
+    height: 60px;
+    background-color: #E0E0E0; /* Light gray placeholder */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+/* Step specific colors */
+.step-1 .step-icon-circle { background-color: #FFE0B2; color: #E65100; }
+.step-2 .step-icon-circle { background-color: #B2DFDB; color: #00695C; }
+.step-3 .step-icon-circle { background-color: #FFF9C4; color: #FBC02D; }
+
+.step-text h4 {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.step-text p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* --- FOOTER / BADGE --- */
+.hackathon-badge {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.trophy {
+    font-size: 18px;
+    color: gold;
 }
