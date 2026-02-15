@@ -1,41 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Join Potluck - Potluck Pal!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="main.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="main.css" />
     <style>
-        .slot-card {
-            background: white;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-        .claimed { opacity: 0.6; background: #e0e0e0; }
-        .claim-btn { background: var(--card-teal); color: white; border: none; padding: 8px 15px; border-radius: 10px; cursor: pointer; }
+      .slot-card {
+        background: white;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+      .claimed {
+        opacity: 0.6;
+        background: #e0e0e0;
+      }
+      .claim-btn {
+        background: var(--card-teal);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <nav>
-        <div class="logo">Potluck Pal!</div>
-        <div class="nav-links"><a href="main.html">Home</a></div>
+      <div class="logo">Potluck Pal!</div>
+      <div class="nav-links"><a href="main.html">Home</a></div>
     </nav>
 
-    <main style="max-width: 600px; margin: 20px auto; padding: 20px;">
-        <h1 id="displayEventName">Loading Event...</h1>
-        <p id="displayEventDate"></p>
-        <hr style="margin: 20px 0;">
-        
-        <div id="slotsContainer">
-            </div>
+    <main style="max-width: 600px; margin: 20px auto; padding: 20px">
+      <h1 id="displayEventName">Loading Event...</h1>
+      <p id="displayEventDate"></p>
+      <hr style="margin: 20px 0" />
+
+      <div id="slotsContainer"></div>
     </main>
 
     <script type="module" src="../backEnd/app.js"></script>
-</body>
+  </body>
 </html>
