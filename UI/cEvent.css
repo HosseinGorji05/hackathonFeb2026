@@ -90,3 +90,109 @@ h2 { text-align: center; margin-bottom: 30px; }
     cursor: pointer;
     text-transform: uppercase;
 }
+
+.glass-nav {
+    position: fixed;     /* Sticks the nav to the screen */
+    top: 20px;           /* Distance from the top */
+    left: 20px;          /* Distance from the left */
+    
+    /* Optional: If you want it to be a small box rather than a full bar */
+    display: inline-flex; 
+    padding: 10px 25px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    z-index: 1000;       /* Keeps it above the glassmorphism card */
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+}
+
+/* Container for the specific aesthetic input */
+.input-group-fancy {
+    position: relative;
+    margin: 20px 0 40px 0; /* Extra bottom margin for the floating label */
+}
+
+.input-group-fancy input {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    padding: 10px 10px 10px 5px;
+    display: block;
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    background: transparent;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.input-group-fancy input:focus {
+    outline: none;
+    border-bottom: 2px solid white;
+}
+
+/* The Label */
+.input-group-fancy label {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 16px;
+    font-weight: normal;
+    position: absolute;
+    pointer-events: none;
+    left: 5px;
+    top: 10px;
+    transition: all 0.3s ease;
+}
+
+/* Floating logic: When focused or NOT empty, move label up */
+.input-group-fancy input:focus ~ label, 
+.input-group-fancy input:not(:placeholder-shown) ~ label {
+    top: -20px;
+    font-size: 13px;
+    color: white;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* The animated underline effect */
+.input-group-fancy .bar {
+    position: relative;
+    display: block;
+    width: 0;
+    height: 2px;
+    background: white;
+    transition: width 0.4s ease;
+    margin: 0 auto;
+}
+
+.input-group-fancy input:focus ~ .bar {
+    width: 100%;
+}
+
+/* The Shake Animation */
+@keyframes shake-hover {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-2px, 1px) rotate(-1deg); }
+    50% { transform: translate(2px, -1px) rotate(1deg); }
+    75% { transform: translate(-1px, 2px) rotate(-1deg); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Applying it to your Nav Link */
+.nav-links a {
+    display: inline-block; /* Required for transform to work properly */
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #ffb766; /* Changes color to your brand orange on hover */
+    animation: shake-hover 0.3s ease-in-out infinite;
+}
