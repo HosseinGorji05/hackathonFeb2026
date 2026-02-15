@@ -193,6 +193,6 @@ h2 { text-align: center; margin-bottom: 30px; }
 }
 
 .nav-links a:hover {
-    color: #ffb766; /* Changes color to your brand orange on hover */
+    color: #ffffff; /* Changes color to your brand orange on hover */
     animation: shake-hover 0.3s ease-in-out infinite;
 }
