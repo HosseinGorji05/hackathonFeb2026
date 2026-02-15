@@ -1,8 +1,8 @@
 1. //// about page 
 
 2. account 
-3. make create-event nice
-4. make different css files
+3. ////make create-event nice
+4. ////make different css files
 5. create a home button for creat-event
 6. make suggestion box in join potluck
 7. let host add or remove courses
