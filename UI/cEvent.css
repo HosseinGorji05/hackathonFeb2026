@@ -59,7 +59,7 @@ h2 { text-align: center; margin-bottom: 30px; }
 
 .counter-controls button {
     background: white;
-    color: #e73c7e;
+    color: #000000;
     border: none;
     width: 28px;
     height: 28px;
@@ -85,7 +85,7 @@ h2 { text-align: center; margin-bottom: 30px; }
     border-radius: 50px;
     border: none;
     background: white;
-    color: #e73c7e;
+    color: #000000;
     font-weight: 700;
     cursor: pointer;
     text-transform: uppercase;
