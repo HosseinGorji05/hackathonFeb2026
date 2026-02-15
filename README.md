@@ -23,6 +23,13 @@ Database: (Add your DB here, e.g., MongoDB or Firebase).
 
 Icons & Fonts: FontAwesome 6.4, Google Fonts (Poppins).
 
+🏗️ Data Architecture
+Following Object-Oriented Programming (OOP) principles, we structured our data into two core classes:
+
+Event: Manages the unique ID, event metadata, and a collection of slots.
+
+ContributionSlot: Handles the state of individual items (Mains, Drinks, Desserts), tracking whether they are claimed and by whom.
+
 📡 Database & Real-Time Sync
 We utilize Firebase Realtime Database (or Firestore) to ensure that potluck slots update instantly across all devices.
 
@@ -48,3 +55,8 @@ hackathonFeb2026/
 │ └── app.js # Now includes Firebase Admin SDK / Config
 ├── firebase.json # Firebase configuration (if using CLI)
 └── README.md
+
+## 👥 The Team
+
+- **Hossein Gorji** - Lead UI/UX Developer & Git Specialist
+- **Adrian Shahnazari** - Backend Architecture & Firebase Integration
