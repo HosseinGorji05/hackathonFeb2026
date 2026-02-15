@@ -8,96 +8,103 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="main.css" />
     <style>
-      /* --- SLOT STYLES --- */
-      .slot-card {
-        background: white;
-        padding: 25px; /* Adjusted from 45px to look cleaner */
-        margin: 10px 0;
-        border-radius: 15px;
+      /* --- EMERGENCY OVERRIDE FOR SIDEBAR LAYOUT --- */
+      body {
+        height: 100vh;
+        overflow: hidden; /* Prevents double scrollbars */
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-      }
-      .claimed {
-        opacity: 0.6;
-        background: #e0e0e0;
-      }
-      .claim-btn {
-        background: var(--card-teal);
-        color: white;
-        border: none;
-        padding: 10px 30px;
-        border-radius: 25px;
-        cursor: pointer;
+        flex-direction: column;
       }
 
-      /* --- FLOATING SUGGESTION BOX STYLES --- */
-      .suggestion-box {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 300px;
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        z-index: 1000;
+      .app-layout {
+        display: flex;
+        flex: 1;
         overflow: hidden;
-        font-family: 'Poppins', sans-serif;
       }
-      .suggestion-header {
-        background: var(--card-teal);
-        color: white;
-        padding: 12px 20px;
-        cursor: pointer;
+
+      /* Sidebar (Left) */
+      .sidebar {
+        width: 320px;
+        background: white;
+        border-right: 2px solid #eee;
+        display: flex;
+        flex-direction: column;
+        padding: 25px;
+        height: 100%;
+      }
+
+      .suggestions-list {
+        flex: 1;
+        overflow-y: auto;
+        margin-bottom: 20px;
+      }
+
+      .suggestion-item {
+        background: #FFF8F0; /* var(--bg-cream) */
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        border-left: 4px solid #FFB766; /* var(--card-orange) */
+        font-size: 14px;
+      }
+
+      /* Main Area (Right) */
+      .content-area {
+        flex: 1;
+        padding: 40px;
+        overflow-y: auto;
+        background-color: #FFF8F0; /* var(--bg-cream) */
+      }
+
+      .slot-card {
+        background: white;
+        padding: 20px 30px;
+        border-radius: 15px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-weight: 600;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
       }
-      .suggestion-content {
-        padding: 15px;
-        display: none; /* Hidden by default, toggled via JS */
-      }
-      .suggestion-content textarea {
+
+      textarea {
         width: 100%;
-        height: 60px;
-        margin-bottom: 10px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        padding: 8px;
+        height: 80px;
+        padding: 10px;
+        border: 2px solid #eee;
+        border-radius: 10px;
         font-family: inherit;
         resize: none;
+        margin-bottom: 10px;
       }
     </style>
   </head>
   <body>
     <nav>
-      <div class="logo">Potluckio!</div>
-      <div class="nav-links">
-        <a href="main.html">Home</a>
-      </div>
+      <div class="logo"><i class="fa-solid fa-utensils"></i> Potluckio!</div>
+      <div class="nav-links"><a href="main.html">Home</a></div>
     </nav>
 
-    <main style="max-width: 600px; margin: 40px auto; padding: 20px;">
-      <h1 id="displayEventName">Loading Event...</h1>
-      <p id="displayEventDate" style="color: #666;"></p>
-      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;" />
-
-      <div id="slotsContainer">
+    <div class="app-layout">
+      <aside class="sidebar">
+        <h3>💡 Feast Ideas</h3>
+        <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Collaborate with the group!</p>
+        
+        <div id="publicSuggestionsList" class="suggestions-list">
+          <p style="color: #ccc;">No suggestions yet...</p>
         </div>
-    </main>
 
-    <div class="suggestion-box" id="floatingSuggestion">
-      <div class="suggestion-header" onclick="toggleSuggestion()">
-        <span>💡 Suggestion for Host</span>
-        <i class="fa-solid fa-chevron-up"></i>
-      </div>
-      <div class="suggestion-content" id="suggestionContent">
-        <textarea id="suggestionText" placeholder="Add a category?"></textarea>
-        <button class="btn-join" style="width: 100%;" onclick="sendSuggestion()">Send</button>
-        <div id="suggestionStatus" style="font-size: 12px; margin-top: 5px; color: var(--card-teal);"></div>
-      </div>
+        <div class="input-area">
+          <textarea id="suggestionText" placeholder="Suggest a dish..."></textarea>
+          <button class="btn-join" style="width: 100%;" onclick="sendSuggestion()">Suggest</button>
+        </div>
+      </aside>
+
+      <main class="content-area">
+        <h1 id="displayEventName">Loading Event...</h1>
+        <p id="displayEventDate" style="margin-bottom: 20px; color: #666;"></p>
+        <div id="slotsContainer"></div>
+      </main>
     </div>
 
     <script type="module" src="../backEnd/app.js"></script>
