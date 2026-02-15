@@ -2,12 +2,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getFirestore, collection, addDoc, getDoc, doc, onSnapshot, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBizcj2eON6m3Z8Eckbk3wEfOPezyd4_gE",
-  authDomain: "potluckio-30b92.firebaseapp.com",
-  projectId: "potluckio-30b92",
-  storageBucket: "potluckio-30b92.firebasestorage.app",
-  messagingSenderId: "643843611690",
-  appId: "1:643843611690:web:125e2a8289d13e793cf753"
+    apiKey: "AIzaSyBizcj2eON6m3Z8Eckbk3wEfOPezyd4_gE",
+    authDomain: "potluckio-30b92.firebaseapp.com",
+    projectId: "potluckio-30b92",
+    storageBucket: "potluckio-30b92.firebasestorage.app",
+    messagingSenderId: "643843611690",
+    appId: "1:643843611690:web:125e2a8289d13e793cf753"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -76,12 +76,13 @@ window.copyInviteText = (name, date, id) => {
     });
 };
 
-// --- PART 2: CLAIM LOGIC ---
+// --- PART 2: CLAIM & MANAGEMENT LOGIC ---
 const urlParams = new URLSearchParams(window.location.search);
 const eventId = urlParams.get('id');
 
 if (eventId && document.getElementById('slotsContainer')) {
-    const eventRef = doc(db, "events", eventId); // Fixed: Moved Ref creation here
+    const eventRef = doc(db, "events", eventId);
+    
     onSnapshot(eventRef, (docSnap) => {
         if (docSnap.exists()) {
             const data = docSnap.data();
@@ -90,6 +91,11 @@ if (eventId && document.getElementById('slotsContainer')) {
 
             const container = document.getElementById('slotsContainer');
             container.innerHTML = ""; 
+
+            // Check if user is the Host of this specific event
+            const savedIds = JSON.parse(localStorage.getItem('myHostedEvents') || '[]');
+            const isHost = savedIds.includes(eventId);
+
             data.slots.forEach((slot, index) => {
                 const slotDiv = document.createElement('div');
                 slotDiv.className = `slot-card ${slot.isClaimed ? 'claimed' : ''}`;
@@ -98,9 +104,23 @@ if (eventId && document.getElementById('slotsContainer')) {
                         <strong>${slot.category}</strong>
                         <p style="font-size: 12px; margin: 0;">${slot.isClaimed ? 'Claimed by ' + slot.guestName : 'Available'}</p>
                     </div>
-                    ${!slot.isClaimed ? `<button class="claim-btn" onclick="claimSlot(${index})">Claim</button>` : ''}`;
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        ${!slot.isClaimed ? `<button class="claim-btn" onclick="claimSlot(${index})">Claim</button>` : ''}
+                        ${isHost ? `<button onclick="removeSlot(${index})" style="background:#ff6b6b; color:white; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>` : ''}
+                    </div>`;
                 container.appendChild(slotDiv);
             });
+
+            // If Host, add the "Add Category" button below the list
+            if (isHost && !document.getElementById('addSlotBtn')) {
+                const addBtn = document.createElement('button');
+                addBtn.id = "addSlotBtn";
+                addBtn.className = "btn-main";
+                addBtn.style = "margin-top: 20px; width: 100%; background-color: var(--card-orange);";
+                addBtn.innerHTML = "<i class='fa-solid fa-plus'></i> Add New Category";
+                addBtn.onclick = addCustomSlot;
+                container.parentNode.appendChild(addBtn);
+            }
 
             const suggestionsList = document.getElementById('publicSuggestionsList');
             if (suggestionsList) {
@@ -124,7 +144,7 @@ window.claimSlot = async (index) => {
     await updateDoc(eventRef, { slots: slots });
 };
 
-// --- PART 3: MY POTLUCKS LOGIC ---
+// --- PART 3: MY POTLUCKS LIST LOGIC ---
 const listContainer = document.getElementById('myEventsList');
 if (listContainer) {
     const renderMyEvents = async () => {
@@ -138,27 +158,22 @@ if (listContainer) {
             const docSnap = await getDoc(doc(db, "events", id));
             if (docSnap.exists()) {
                 const data = docSnap.data();
-                const suggestions = data.suggestions || [];
                 const item = document.createElement('div');
-                item.className = "my-potluck-item"; // Use your existing styles
                 item.style = "background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #66B2B2;";
                 item.innerHTML = `
-                    <div style="display: flex; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div onclick="window.location.href='claim-event.html?id=${id}'" style="cursor: pointer;">
-                            <strong>${data.eventName}</strong>
-                            <p>${data.eventDate}</p>
+                            <strong style="font-size: 18px;">${data.eventName}</strong>
+                            <p style="color: #666; font-size: 14px;">${data.eventDate}</p>
                         </div>
-                        <button onclick="deleteEvent('${id}')" style="background:#ff6b6b; color:white; border:none; border-radius:8px; padding:5px 10px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                    <div style="margin-top:10px; font-size:13px; color:#555;">
-                        <b>Suggestions:</b> ${suggestions.length > 0 ? suggestions.map(s => `<li>${s.text}</li>`).join('') : 'None'}
+                        <button onclick="deleteEvent('${id}')" style="background:#ff6b6b; color:white; border:none; border-radius:8px; padding:8px 12px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
                     </div>`;
                 listContainer.appendChild(item);
             }
         }
     };
     window.deleteEvent = (id) => {
-        if (confirm("Remove from list?")) {
+        if (confirm("Remove from your history list?")) {
             let savedIds = JSON.parse(localStorage.getItem('myHostedEvents') || '[]');
             savedIds = savedIds.filter(itemId => itemId !== id);
             localStorage.setItem('myHostedEvents', JSON.stringify(savedIds));
@@ -179,4 +194,24 @@ window.sendSuggestion = async () => {
     currentSuggestions.push({ text: text, timestamp: new Date().toLocaleTimeString(), guest: "Anonymous" });
     await updateDoc(eventRef, { suggestions: currentSuggestions });
     document.getElementById('suggestionText').value = "";
+};
+
+// --- PART 5: HOST MANAGEMENT (ADD/REMOVE SLOTS) ---
+window.addCustomSlot = async () => {
+    const category = prompt("What should be added? (e.g. Napkins, Chips, Water)");
+    if (!category || !eventId) return;
+    const eventRef = doc(db, "events", eventId);
+    const docSnap = await getDoc(eventRef);
+    const slots = docSnap.data().slots || [];
+    slots.push({ category: category, isClaimed: false, guestName: "" });
+    await updateDoc(eventRef, { slots: slots });
+};
+
+window.removeSlot = async (index) => {
+    if (!confirm("Remove this requirement?")) return;
+    const eventRef = doc(db, "events", eventId);
+    const docSnap = await getDoc(eventRef);
+    const slots = docSnap.data().slots || [];
+    slots.splice(index, 1);
+    await updateDoc(eventRef, { slots: slots });
 };
