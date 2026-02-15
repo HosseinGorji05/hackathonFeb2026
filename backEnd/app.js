@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, getDoc, doc, onSnapshot, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// 1. FIREBASE CONFIG
 const firebaseConfig = {
     apiKey: "AIzaSyBizcj2eON6m3Z8Eckbk3wEfOPezyd4_gE",
     authDomain: "potluckio-30b92.firebaseapp.com",
@@ -47,11 +48,10 @@ if (createForm) {
                 <div style="text-align: center; padding: 20px;">
                     <i class="fa-solid fa-circle-check" style="font-size: 50px; color: #66B2B2; margin-bottom: 20px;"></i>
                     <h2>Event Created!</h2>
-                    <p>Share this with your friends:</p>
-                    <div style="background: #f0f0f0; padding: 15px; border-radius: 10px; margin: 20px 0; font-family: monospace; font-size: 16px; border: 2px dashed #ccc;">ID: ${docRef.id}</div>
+                    <p>Share this ID with your guests:</p>
+                    <div style="background: #f0f0f0; padding: 15px; border-radius: 10px; margin: 20px 0; font-family: monospace; font-size: 18px; border: 2px dashed #ccc;">${docRef.id}</div>
                     <div style="display: flex; gap: 10px; justify-content: center;">
                         <button class="btn-join" onclick="copyEventID('${docRef.id}')" id="copyBtn"><i class="fa-solid fa-copy"></i> Copy ID</button>
-                        <button class="btn-join" style="background-color: var(--card-orange);" onclick="copyInviteText('${name}', '${date}', '${docRef.id}')" id="inviteBtn"><i class="fa-solid fa-share-nodes"></i> Copy Invite</button>
                     </div>
                     <br><a href="main.html" style="color: #66B2B2; text-decoration: none; font-weight: bold;">Return Home</a>
                 </div>`;
@@ -67,22 +67,12 @@ window.copyEventID = (id) => {
     });
 };
 
-window.copyInviteText = (name, date, id) => {
-    const inviteMsg = `Hey! Join the potluck for "${name}" on ${date}. 🍲\nEvent ID: ${id}`;
-    navigator.clipboard.writeText(inviteMsg).then(() => {
-        const btn = document.getElementById('inviteBtn');
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-        setTimeout(() => { btn.innerHTML = '<i class="fa-solid fa-share-nodes"></i> Copy Invite'; }, 2000);
-    });
-};
-
 // --- PART 2: CLAIM & MANAGEMENT LOGIC ---
 const urlParams = new URLSearchParams(window.location.search);
 const eventId = urlParams.get('id');
 
 if (eventId && document.getElementById('slotsContainer')) {
     const eventRef = doc(db, "events", eventId);
-    
     onSnapshot(eventRef, (docSnap) => {
         if (docSnap.exists()) {
             const data = docSnap.data();
@@ -92,7 +82,6 @@ if (eventId && document.getElementById('slotsContainer')) {
             const container = document.getElementById('slotsContainer');
             container.innerHTML = ""; 
 
-            // Check if user is the Host of this specific event
             const savedIds = JSON.parse(localStorage.getItem('myHostedEvents') || '[]');
             const isHost = savedIds.includes(eventId);
 
@@ -111,12 +100,11 @@ if (eventId && document.getElementById('slotsContainer')) {
                 container.appendChild(slotDiv);
             });
 
-            // If Host, add the "Add Category" button below the list
             if (isHost && !document.getElementById('addSlotBtn')) {
                 const addBtn = document.createElement('button');
                 addBtn.id = "addSlotBtn";
                 addBtn.className = "btn-main";
-                addBtn.style = "margin-top: 20px; width: 100%; background-color: var(--card-orange);";
+                addBtn.style = "margin-top: 20px; width: 100%; background-color: #FFB766;";
                 addBtn.innerHTML = "<i class='fa-solid fa-plus'></i> Add New Category";
                 addBtn.onclick = addCustomSlot;
                 container.parentNode.appendChild(addBtn);
@@ -126,7 +114,7 @@ if (eventId && document.getElementById('slotsContainer')) {
             if (suggestionsList) {
                 const suggestions = data.suggestions || [];
                 suggestionsList.innerHTML = suggestions.length > 0 
-                    ? suggestions.map(s => `<div class="suggestion-item"><p>${s.text}</p><small>${s.timestamp}</small></div>`).join('')
+                    ? suggestions.map(s => `<div class="suggestion-item"><p>${s.text}</p><small>${s.guest} — ${s.timestamp}</small></div>`).join('')
                     : "<p style='color:#ccc;'>No suggestions yet.</p>";
             }
         }
@@ -134,8 +122,9 @@ if (eventId && document.getElementById('slotsContainer')) {
 }
 
 window.claimSlot = async (index) => {
-    const guestName = prompt("Enter your name to claim this slot:");
+    let guestName = prompt("Enter your name to claim this slot:");
     if (!guestName) return;
+    
     const eventRef = doc(db, "events", eventId);
     const docSnap = await getDoc(eventRef);
     const slots = docSnap.data().slots;
@@ -187,18 +176,25 @@ if (listContainer) {
 window.sendSuggestion = async () => {
     const text = document.getElementById('suggestionText').value.trim();
     if (!text || !eventId) return;
+
     const eventRef = doc(db, "events", eventId);
     const docSnap = await getDoc(eventRef);
     const data = docSnap.data();
+    
     const currentSuggestions = data.suggestions || [];
-    currentSuggestions.push({ text: text, timestamp: new Date().toLocaleTimeString(), guest: "Anonymous" });
+    currentSuggestions.push({ 
+        text: text, 
+        timestamp: new Date().toLocaleTimeString(), 
+        guest: "Guest" 
+    });
+    
     await updateDoc(eventRef, { suggestions: currentSuggestions });
     document.getElementById('suggestionText').value = "";
 };
 
-// --- PART 5: HOST MANAGEMENT (ADD/REMOVE SLOTS) ---
+// --- PART 5: HOST MANAGEMENT ---
 window.addCustomSlot = async () => {
-    const category = prompt("What should be added? (e.g. Napkins, Chips, Water)");
+    const category = prompt("What should be added?");
     if (!category || !eventId) return;
     const eventRef = doc(db, "events", eventId);
     const docSnap = await getDoc(eventRef);
