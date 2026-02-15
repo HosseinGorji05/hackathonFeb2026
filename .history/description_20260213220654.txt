@@ -1,0 +1,11 @@
+🏗️ The Project Roadmap
+
+1. Data Modeling (OOP Focus)
+Before writing any UI code, define your objects:
+
+Event Object: Includes a unique ID, event name, date, and a list of ContributionSlot objects.
+
+ContributionSlot Object: Contains a category (Main, Drink, Dessert), a status (isClaimed), 
+and the name of the guest who claimed it.
+
+

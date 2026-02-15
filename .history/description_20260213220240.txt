@@ -1,0 +1,3 @@
+🏗️ The Project Roadmap
+
+Event Object: Includes a unique ID, event name, date, and a list of ContributionSlot objects.
