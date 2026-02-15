@@ -124,20 +124,40 @@ if (listContainer) {
             listContainer.innerHTML = "<p>No events found. Start hosting!</p>";
             return;
         }
+
         listContainer.innerHTML = "";
         for (const id of savedIds) {
             const docSnap = await getDoc(doc(db, "events", id));
             if (docSnap.exists()) {
                 const data = docSnap.data();
+                const suggestions = data.suggestions || [];
+                
                 const item = document.createElement('div');
-                item.style = "background: white; padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center;";
+                item.style = "background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #66B2B2;";
+                
+                // Build the HTML for the event and its suggestions
+                let suggestionsHTML = suggestions.length > 0 
+                    ? `<div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee;">
+                        <small style="font-weight: 700; color: #66B2B2;">Guest Suggestions (${suggestions.length}):</small>
+                        <ul style="font-size: 13px; color: #555; margin-top: 5px; padding-left: 20px;">
+                            ${suggestions.map(s => `<li>"${s.text}" <small style="color:#999;">— ${s.timestamp}</small></li>`).join('')}
+                        </ul>
+                       </div>`
+                    : `<p style="font-size: 12px; color: #999; margin-top: 10px;">No suggestions yet.</p>`;
+
                 item.innerHTML = `
-                    <div onclick="window.location.href='claim-event.html?id=${id}'" style="cursor: pointer; flex-grow: 1;">
-                        <strong style="font-size: 18px;">${data.eventName}</strong>
-                        <p style="color: #666; font-size: 14px; margin: 5px 0;">${data.eventDate}</p>
-                        <small style="color: #66B2B2;">ID: ${id}</small>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div onclick="window.location.href='claim-event.html?id=${id}'" style="cursor: pointer; flex-grow: 1;">
+                            <strong style="font-size: 18px;">${data.eventName}</strong>
+                            <p style="color: #666; font-size: 14px; margin: 5px 0;">${data.eventDate}</p>
+                            <small style="color: #999;">ID: ${id}</small>
+                        </div>
+                        <button onclick="deleteEvent('${id}')" style="background: #ff6b6b; color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer;">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
                     </div>
-                    <button onclick="deleteEvent('${id}')" style="background: #ff6b6b; color: white; border: none; padding: 8px; border-radius: 8px; cursor: pointer;"><i class="fa-solid fa-trash"></i></button>`;
+                    ${suggestionsHTML}
+                `;
                 listContainer.appendChild(item);
             }
         }
