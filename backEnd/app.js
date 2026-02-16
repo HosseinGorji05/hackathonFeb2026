@@ -3,12 +3,12 @@ import { getFirestore, collection, addDoc, getDoc, doc, onSnapshot, updateDoc, d
 
 // 1. FIREBASE CONFIG
 const firebaseConfig = {
-    apiKey: "AIzaSyBizcj2eON6m3Z8Eckbk3wEfOPezyd4_gE",
-    authDomain: "potluckio-30b92.firebaseapp.com",
-    projectId: "potluckio-30b92",
-    storageBucket: "potluckio-30b92.firebasestorage.app",
-    messagingSenderId: "643843611690",
-    appId: "1:643843611690:web:125e2a8289d13e793cf753"
+    apiKey: "inserthere",
+    authDomain: "inserthere
+    projectId: "inserthere",
+    storageBucket: "inserthere",
+    messagingSenderId: "inserthere",
+    appId: "inserthere"
 };
 
 const app = initializeApp(firebaseConfig);
